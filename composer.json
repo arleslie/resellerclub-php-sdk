@@ -1,0 +1,22 @@
+{
+    "name": "arleslie/resellerclub-php",
+    "description": "PHP SDK for ResellerClub API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew Leslie",
+            "email": "arleslie@arleslie.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~6"
+    },
+    "autoload": {
+        "psr-4": {
+            "arleslie\\ResellerClub\\": "src/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
