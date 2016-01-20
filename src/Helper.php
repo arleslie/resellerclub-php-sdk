@@ -5,7 +5,7 @@ namespace arleslie\ResellerClub;
 use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Message\Response;
 
-class Helper
+trait Helper
 {
 	protected $guzzle;
 
@@ -17,14 +17,14 @@ class Helper
 	protected function get($method, $args)
 	{
 		return $this->parse(
-			$this->client->get($method.'.json?'.http_build_query($args))
+			$this->guzzle->get($method.'.json?'.http_build_query($args))
 		);
 	}
 
 	protected function post($method, $args)
 	{
 		return $this->parse(
-			$this->client->post($method.'.json', $args)
+			$this->guzzle->post($method.'.json', $args)
 		);
 	}
 

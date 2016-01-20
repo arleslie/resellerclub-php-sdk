@@ -2,7 +2,7 @@
 
 namespace arleslie\ResellerClub;
 
-use guzzlehttp\client as Guzzle;
+use GuzzleHttp\Client as Guzzle;
 
 class ResellerClub {
 	const API_URL = 'https://httpapi.com/api/';
@@ -27,7 +27,7 @@ class ResellerClub {
 	private function _getAPI($api)
 	{
 		if (empty($this->apis[$api])) {
-			$class = 'APIs\\' . $api;
+			$class = 'arleslie\\ResellerClub\\APIs\\' . $api;
 			$this->apis[$api] = new $class($this->guzzle);
 		}
 
