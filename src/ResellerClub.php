@@ -10,16 +10,19 @@ class ResellerClub {
 
 	private $guzzle;
 	private $apis = [];
+	private $creds = []; // Get calls do not use default query string
 
 	public function __construct($userid, $apikey, $testmode = false)
 	{
+		$this->creds = [
+			'auth-userid' => $userid,
+			'api-key' => $apikey
+		];
+
 		$this->guzzle = new Guzzle([
 			'base_uri' => $testmode ? self::API_TEST_URL :  self::API_URL,
 			'defaults' => [
-				'query' => [
-					'auth-userid' => $userid,
-					'api-key' => $apikey
-				]
+				'query' => $this->creds
 			]
 		]);
 	}
@@ -28,7 +31,7 @@ class ResellerClub {
 	{
 		if (empty($this->apis[$api])) {
 			$class = 'arleslie\\ResellerClub\\APIs\\' . $api;
-			$this->apis[$api] = new $class($this->guzzle);
+			$this->apis[$api] = new $class($this->guzzle, $this->creds);
 		}
 
 		return $this->apis[$api];
