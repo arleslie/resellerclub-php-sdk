@@ -41,7 +41,7 @@ class Domains {
 
 	public function ukAvailable($domain, $name, $company, $email, $address1, $city, $state, $zipcode, $country, $address2 = '', $address3 = '', $phonecc = '', $phone = '')
 	{
-		return $this->get(
+		return $this->post(
 			'available',
 			[
 				'domain-name' => $domain,
@@ -88,7 +88,7 @@ class Domains {
 			];
 		}
 
-		return $this->get(
+		return $this->post(
 			'register',
 			[
 				'domain-name' => $domain,
@@ -119,7 +119,7 @@ class Domains {
 			];
 		}
 
-		return $this->get(
+		return $this->post(
 			'register',
 			[
 				'domain-name' => $domain,
@@ -139,7 +139,7 @@ class Domains {
 
 	public function submitAuthCode($orderId, $code)
 	{
-		return $this->get(
+		return $this->post(
 			'submit-auth-code',
 			[
 				'order-id' => $orderId,
@@ -158,7 +158,7 @@ class Domains {
 
 	public function renew($orderId, $years, $exp, $purchasePrivacy, $invoice)
 	{
-		return $this->get('renew', [
+		return $this->post('renew', [
 			'order-id' => $orderId,
 			'years' => $years,
 			'exp-date' => strtotime($exp),
@@ -247,12 +247,12 @@ class Domains {
 
 	public function modifyNameServers($orderId, $ns)
 	{
-		return $this->get('modify-ns', ['order-id' => $orderId, 'ns' => $ns]);
+		return $this->post('modify-ns', ['order-id' => $orderId, 'ns' => $ns]);
 	}
 
 	public function addChildNameServer($orderId, $cns, $ip)
 	{
-		return $this->get('add-cns', [
+		return $this->post('add-cns', [
 			'order-id' => $orderId,
 			'cns' => $ns,
 			'ip' => $ip
@@ -261,7 +261,7 @@ class Domains {
 
 	public function renameChildNameServer($orderId, $oldcns, $newcns)
 	{
-		return $this->get('modify-cns-name', [
+		return $this->post('modify-cns-name', [
 			'order-id' => $orderId,
 			'old-cns' => $oldcns,
 			'new-cns' => $newcns
@@ -270,11 +270,235 @@ class Domains {
 
 	public function modifyChildNameServer($orderId, $cns, $oldIP, $newIP)
 	{
-		return $this->get('modify-cns-ip', [
+		return $this->post('modify-cns-ip', [
 			'order-id' => $orderId,
 			'cns' => $cns,
 			'old-ip' => $oldIP,
 			'new-ip' => $newIP
 		]);
+	}
+
+	public function deleteChildNameServer($orderId, $cns, $ip)
+	{
+		return $this->post('delete-cns-ip', [
+			'order-id' => $orderId,
+			'cns' => $ns,
+			'ip' => $ip
+		]);
+	}
+
+	public function modifyContact($orderId, $regContactId, $adminContactId, $techContactId, $billingContactId)
+	{
+		return $this->post('modify-contact', [
+			'order-id' => $orderId,
+			'reg-contact-id' => $regContactId,
+			'admin-contact-id' => $adminContactId,
+			'tech-contact-id' => $techContactId,
+			'billing-contact-id' => $billingContactId
+		]);
+	}
+
+	public function purchasePrivacy($orderId, $invoiceOption)
+	{
+		return $this->post('modify-contact', [
+			'order-id' => $orderId,
+			'invoice-option' => $invoiceOption // NoInvoice, PayInvoice, KeepInvoice, OnlyAdd
+		]);
+	}
+
+	public function modifyPrivacyProtection($orderId, $protectPrivacy, $reason)
+	{
+		return $this->post('modify-privacy-protection', [
+			'order-id' => $orderId,
+			'protect-privacy' => $protectPrivacy,
+			'reason' => $reason
+		]);
+	}
+
+	public function modifyAuthCode($orderId, $authCode)
+	{
+		return $this->post('modify-auth-code', [
+			'order-id' => $orderId,
+			'auth-code' => $authCode
+		]);
+	}
+
+	public function enableTheftProtection($orderId)
+	{
+		return $this->post('enable-theft-protection', ['order-id' => $orderId]);
+	}
+
+	public function disableTheftProtection($orderId)
+	{
+		return $this->post('disable-theft-protection', ['order-id' => $orderId]);
+	}
+
+	public function getLocks($orderId)
+	{
+		return $this->get('locks', ['order-id' => $orderId]);
+	}
+
+	public function getCthDetails($orderId)
+	{
+		return $this->get('cth-details', ['order-id' => $orderId], 'tel/');
+	}
+
+	public function modifyTelWhoisPreference($orderId, $type, $publish)
+	{
+		return $this->post(
+			'modify-whois-pref',
+			[
+				'order-id' => $orderId,
+				'whois-type' => $type, // Natural, Legal
+				'publish' => $publish
+			],
+			'tel/'
+		);
+	}
+
+	public function resendRfa($orderId)
+	{
+		return $this->post('resend-rfa', ['order-id' => $orderId]);
+	}
+
+	public function releaseUk($orderId, $tag)
+	{
+		return $this->post('release', ['order-id' => $orderId, 'new-tag' => $tag], 'uk/');
+	}
+
+	public function cancelTransfer($orderId)
+	{
+		return $this->post('cancel-transfer', ['order-id' => $orderId]);
+	}
+
+	public function delete($orderId)
+	{
+		return $this->post('delete', ['order-id' => $orderId]);
+	}
+
+	public function restore($orderId, $invoice)
+	{
+		return $this->post('restore', ['order-id' => $orderId, 'invoice-option' => $invoice]);
+	}
+
+	public function recheckNsDe($orderId)
+	{
+		return $this->post('recheck-ns', ['order-id' => $orderId], 'de/');
+	}
+
+	public function setXXXAssoication($orderId, $id = '')
+	{
+		return $this->post('assoication-details', ['order-id' => $orderId, 'association-id' => $id], 'dotxxx/');
+	}
+
+	public function getXXXAssoication($orderId)
+	{
+		return $this->post('assoication-details', ['order-id' => $orderId], 'dotxxx/');
+	}
+
+	public function addDNSSEC($orderId, $attributes)
+	{
+		$data = ['orderId' => $orderId];
+
+		$i = 0;
+		foreach ($attributes as $key => $value) {
+			$i++;
+			$data["attr-name{$i}"] = $key;
+			$data["attr-value{$i}"] = $value;
+		}
+
+		return $this->post('add-dnssec', $data);
+	}
+
+	public function delDNSSEC($orderId, $attributes)
+	{
+		$data = ['orderId' => $orderId];
+
+		$i = 0;
+		foreach ($attributes as $key => $value) {
+			$i++;
+			$data["attr-name{$i}"] = $key;
+			$data["attr-value{$i}"] = $value;
+		}
+
+		return $this->post('del-dnssec', $data);
+	}
+
+	public function resendVerificationEmail($orderId)
+	{
+		return $this->post('resend-verification', ['order-id' => $orderId], 'raa/');
+	}
+
+	public function addWishlist($customerId, $domains)
+	{
+		return $this->post('add', ['customerid' => $customerId, 'domain' => $domains], 'preordering/');
+	}
+
+	public function deleteWishlist($customerId, $domain)
+	{
+		return $this->post('delete', ['customerid' => $customerId, 'domain' => $domain], 'preordering/');
+	}
+
+	public function fetchWishlist($records = 10, $page = 0, $customerId = -1, $resellerId = -1, $slds = [], $tlds = [], $createdStart = false, $createdEnd = false)
+	{
+		$data = [
+			'no-of-records' => $records,
+			'page-no' => $page,
+		];
+
+		if ($customerId !== -1) {
+			$data['customerid'] = $customerid;
+		}
+
+		if ($resellerId !== -1) {
+			$data['resellerId'] = $resellerId;
+		}
+
+		if (!empty($slds)) {
+			$data['domain'] = $slds;
+		}
+
+		if (!empty($tlds)) {
+			$data['tld'] = $tlds;
+		}
+
+		if ($createdStart !== false) {
+			$data['creation-date-start'] = strtotime($createdStart);
+		}
+
+		if ($createdEnd !== false) {
+			$data['creation-date-end'] = strtotime($createdEnd);
+		}
+
+		return $this->get('fetch', $data, 'preordering/');
+	}
+
+	public function fetchTLDs($category)
+	{
+		return $this->get('fetchtldlist', ['category' => $category], 'preordering/');
+	}
+
+	public function checkSunrise($sld, $tlds, $smd)
+	{
+		return $this->get('available-sunrise', [
+			'sld' => $sld,
+			'tld' => $tlds,
+			'smd' => $smd
+		]);
+	}
+
+	public function fetchTMClaim($claimKey)
+	{
+		return $this->get('get-tm-notice', ['lookup-key' => $claimKey]);
+	}
+
+	public function getPreorderTLDs($phase = 'sunrise')
+	{
+		return $this->get('tlds-in-phase', ['phase' => $phase]);
+	}
+
+	public function getTLDs()
+	{
+		return $this->get('tld-info');
 	}
 }
