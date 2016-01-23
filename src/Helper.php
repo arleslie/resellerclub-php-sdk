@@ -16,7 +16,7 @@ trait Helper
 		$this->guzzle = $guzzle;
 	}
 
-	protected function get($method, $args, $prefix = '')
+	protected function get($method, $args = [], $prefix = '')
 	{
 		return $this->parse(
 			$this->guzzle->get(
@@ -25,7 +25,7 @@ trait Helper
 		);
 	}
 
-	protected function getXML($method, $args, $prefix = '')
+	protected function getXML($method, $args = [], $prefix = '')
 	{
 		return $this->parse(
 			$this->guzzle->get(
@@ -35,10 +35,10 @@ trait Helper
 		);
 	}
 
-	protected function post($method, $args)
+	protected function post($method, $args = [], $prefix = '')
 	{
 		return $this->parse(
-			$this->guzzle->post($method.'.json', $args)
+			$this->guzzle->post($prefix . $method.'.json', $args)
 		);
 	}
 
