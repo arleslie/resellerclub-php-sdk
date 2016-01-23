@@ -53,4 +53,18 @@ trait Helper
 				throw new Exception("Invalid repsonse type");
 		}
 	}
+
+	protected function processAttributes($args = [])
+	{
+		$data = [];
+
+		$i = 0;
+		foreach ($attributes as $key => $value) {
+			$i++;
+			$data["attr-name{$i}"] = $key;
+			$data["attr-value{$i}"] = $value;
+		}
+
+		return $data;
+	}
 }

@@ -77,17 +77,6 @@ class Domains {
 
 	public function register($domain, $years, $ns, $customer, $reg, $admin, $tech, $billing, $invoice, $purchasePrivacy = false, $protectPrivacy = false, $additional = [])
 	{
-		// For idn codes, tm-claim, and pre registrations.
-		$attr = []; $i = 0;
-		foreach ($additional as $key => $value) {
-			$i++;
-
-			$attr[] = [
-				"attr-name{$i}" => $key,
-				"attr-value{$i}" => $value
-			];
-		}
-
 		return $this->post(
 			'register',
 			[
@@ -102,23 +91,12 @@ class Domains {
 				'invoice-option' => $invoice, // Options: NoInvoice, PayInvoice, KeepInvoice
 				'purchase-privacy' => $purchasePrivacy,
 				'protect-privacy' => $protectPrivacy,
-			] + $attr
+			] + $this->processAttributes($additional)
 		);
 	}
 
 	public function transfer($domain, $customer, $reg, $admin, $tech, $billing, $invoice, $code, $ns = [], $purchasePrivacy = false, $protectPrivacy = false, $additional = [])
 	{
-		// For premium transfers and .asia tld
-		$attr = []; $i = 0;
-		foreach ($additional as $key => $value) {
-			$i++;
-
-			$attr[] = [
-				"attr-name{$i}" => $key,
-				"attr-value{$i}" => $value
-			];
-		}
-
 		return $this->post(
 			'register',
 			[
@@ -133,7 +111,7 @@ class Domains {
 				'invoice-option' => $invoice, // Options: NoInvoice, PayInvoice, KeepInvoice
 				'purchase-privacy' => $purchasePrivacy,
 				'protect-privacy' => $protectPrivacy,
-			] + $attr
+			] + $this->processAttributes($additional)
 		);
 	}
 
@@ -398,30 +376,14 @@ class Domains {
 
 	public function addDNSSEC($orderId, $attributes)
 	{
-		$data = ['orderId' => $orderId];
-
-		$i = 0;
-		foreach ($attributes as $key => $value) {
-			$i++;
-			$data["attr-name{$i}"] = $key;
-			$data["attr-value{$i}"] = $value;
-		}
-
-		return $this->post('add-dnssec', $data);
+		$attributes = $this->processAttributes($attributes);
+		return $this->post('add-dnssec', ['orderId' => $orderId] + $attributes);
 	}
 
 	public function delDNSSEC($orderId, $attributes)
 	{
-		$data = ['orderId' => $orderId];
-
-		$i = 0;
-		foreach ($attributes as $key => $value) {
-			$i++;
-			$data["attr-name{$i}"] = $key;
-			$data["attr-value{$i}"] = $value;
-		}
-
-		return $this->post('del-dnssec', $data);
+		$attributes = $this->processAttributes($attributes);
+		return $this->post('del-dnssec', ['orderId' => $orderId] + $attributes);
 	}
 
 	public function resendVerificationEmail($orderId)
