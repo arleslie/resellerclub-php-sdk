@@ -41,4 +41,9 @@ class ResellerClub {
 	{
 		return $this->_getAPI('Domains');
 	}
+
+	public function contacts()
+	{
+		return $this->_getAPI('contacts');
+	}
 }
